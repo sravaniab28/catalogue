@@ -1,5 +1,5 @@
 pipeline {
-    agent { node {label'AGENT-1'} }
+    agent { node { label'AGENT-1' } }
     stages {
         stage('Istall dependenicies') {
             steps {
