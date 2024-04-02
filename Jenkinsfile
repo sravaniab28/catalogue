@@ -7,15 +7,15 @@ pipeline {
             }
         }
          stage('Unit test') {
-            steps {
-              echo "unit testing is done here"
+             steps {
+                echo "unit testing is done here"
             }
         } 
          stage('sonar scan') {
-            steps {
-              sh 'ls -ltr'
-              sh 'sonar-scanner'
-            }
+             steps {
+                sh 'ls -ltr'
+                sh 'sonar-scanner'
+             }
         }     
     }
 }
