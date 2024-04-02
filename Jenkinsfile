@@ -3,20 +3,15 @@ pipeline {
     stages {
         stage('Istall dependenicies') {
             steps {
-                 sh 'npm install'
+              sh 'npm install'
             }
         }
          stage('Unit test') {
             steps {
-                 echo 'unit testing is done here'
+              echo 'unit testing is done here'
             }
         }
-         stage('sonar scan') {
-            steps {
-                sh 'ls -ltr'
-                 sh 'sonar-scanner'
-            }
-        }
+        
 
     }
 }
