@@ -6,6 +6,10 @@ pipeline {
                 sh 'npm install'
             }
         }
-    }
- 
+        stage('unit test') {
+            steps {
+                echo "unit testing is done here"
+            }
+        }
+    } 
 }
