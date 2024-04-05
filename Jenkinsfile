@@ -1,40 +1,51 @@
 pipeline {
     agent { node { label 'AGENT-1' } }
+    environment{
+        //here if you create any variable you will have global access, since it is environment no need of def
+        packageVersion = ''
+    }
     stages {
-        stage('Install dependencies') {
+        stage('Install depdencies') {
             steps {
                 sh 'npm install'
             }
         }
-        stage('unit test') {
+        stage('Unit test') {
             steps {
                 echo "unit testing is done here"
             }
         }
-        // stage('sonar scan') {
+        //sonar-scanner command expect sonar-project.properties should be available
+        // stage('Sonar Scan') {
         //     steps {
-        //         sh 'ls -ltr'
-        //         sh 'sonar-scanner'
+        //         echo "Sonar scan done"
         //     }
         // }
         stage('Build') {
             steps {
                 sh 'ls -ltr'
-                sh 'zip -r catalogue.zip ./* --exclude=.git  --exclude=.zip'
+                sh 'zip -r catalogue.zip ./* --exclude=.git --exclude=.zip'
             }
         }
-         stage('publish Artifact') {
+        // stage('SAST') {
+        //     steps {
+        //         echo "SAST Done"
+        //         echo "package version: $packageVersion"
+        //     }
+        // }
+        //install pipeline utility steps plugin, if not installed
+        stage('Publish Artifact') {
             steps {
                 nexusArtifactUploader(
                     nexusVersion: 'nexus3',
                     protocol: 'http',
                     nexusUrl: '54.86.204.92:8081/',
                     groupId: 'com.roboshop',
-                    version: '1.0.0',
+                    version: "$packageVersion",
                     repository: 'catalogue',
                     credentialsId: 'nexus-auth',
                     artifacts: [
-                        [artifactId: catalogue,
+                        [artifactId: 'catalogue',
                         classifier: '',
                         file: 'catalogue.zip',
                         type: 'zip']
@@ -43,18 +54,25 @@ pipeline {
             }
         }
 
+        //here I need to configure downstram job. I have to pass package version for deployment
+        // This job will wait until downstrem job is over
+        // stage('Deploy') {
+        //     steps {
+        //         script{
+        //             echo "Deployment"
+        //             def params = [
+        //                 string(name: 'version', value: "$packageVersion")
+        //             ]
+        //             build job: "../catalogue-deploy", wait: true, parameters: params
+        //         }
+        //     }
+        // }
+    }
 
-
-         stage('deploy') {
-            steps {
-                echo "deployment"
-            }
-        }
-    } 
     post{
         always{
-            echo "cleaning up workspace"
-             //deleteDir()
+            echo 'cleaning up workspace'
+            //deleteDir()
         }
     }
 }
