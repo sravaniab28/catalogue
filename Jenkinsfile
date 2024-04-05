@@ -30,7 +30,7 @@ pipeline {
                     protocol: 'http',
                     nexusUrl: '54.86.204.92:8081/',
                     groupId: 'com.roboshop',
-                    version: 1.0.0,
+                    version: '1.0.0',
                     repository: 'catalogue',
                     credentialsId: 'nexus-auth',
                     artifacts: [
@@ -42,6 +42,9 @@ pipeline {
                 )
             }
         }
+
+
+
          stage('deploy') {
             steps {
                 echo "deployment"
